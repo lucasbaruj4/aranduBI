@@ -1,12 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import { useUser } from '@clerk/nextjs';
 import DashboardLayout from '@/components/layout/DashboardLayout';
+import AIAssistant from '@/components/ai/AIAssistant';
 import { 
   CurrencyDollarIcon,
   UserGroupIcon,
   ShoppingCartIcon,
-  TrendingUpIcon
+  ArrowTrendingUpIcon
 } from '@heroicons/react/24/outline';
 
 interface MetricCardProps {
@@ -14,7 +16,7 @@ interface MetricCardProps {
   value: string;
   change: string;
   changeType: 'increase' | 'decrease' | 'neutral';
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{ className?: string }>;
 }
 
 function MetricCard({ title, value, change, changeType, icon: Icon }: MetricCardProps) {
@@ -41,6 +43,7 @@ function MetricCard({ title, value, change, changeType, icon: Icon }: MetricCard
 
 export default function DashboardPage() {
   const { user } = useUser();
+  const [isAIOpen, setIsAIOpen] = useState(false);
 
   const metrics = [
     {
@@ -69,7 +72,7 @@ export default function DashboardPage() {
       value: '12.5%',
       change: '+2.1% from last month',
       changeType: 'increase' as const,
-      icon: TrendingUpIcon,
+      icon: ArrowTrendingUpIcon,
     },
   ];
 
@@ -82,7 +85,7 @@ export default function DashboardPage() {
             Welcome back, {user?.firstName || 'there'}!
           </h1>
           <p className="text-gray-600 mt-1">
-            Here's what's happening with your business today.
+            Here&apos;s what&apos;s happening with your business today.
           </p>
         </div>
 
@@ -146,6 +149,12 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {/* AI Assistant */}
+      <AIAssistant 
+        isOpen={isAIOpen} 
+        onToggle={() => setIsAIOpen(!isAIOpen)} 
+      />
     </DashboardLayout>
   );
 }

@@ -43,7 +43,7 @@ export interface DataSource {
   name: string;
   isActive: boolean;
   lastSync?: string;
-  config: Record<string, any>;
+  config: Record<string, unknown>;
   createdAt: string;
 }
 
@@ -62,7 +62,7 @@ export interface Widget {
   id: string;
   type: 'chart' | 'metric' | 'table' | 'text';
   title: string;
-  config: WidgetConfig;
+  config: Record<string, unknown>;
   position: { x: number; y: number; w: number; h: number };
 }
 
@@ -70,7 +70,7 @@ export interface WidgetConfig {
   chartType?: 'line' | 'bar' | 'pie' | 'donut';
   dataSource: string;
   metrics: string[];
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
 }
 
 export interface DashboardLayout {
@@ -91,14 +91,14 @@ export interface AIQuery {
 }
 
 // API Response types
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
   message?: string;
 }
 
-export interface PaginatedResponse<T = any> extends ApiResponse<T[]> {
+export interface PaginatedResponse<T = unknown> extends ApiResponse<T[]> {
   pagination: {
     page: number;
     limit: number;

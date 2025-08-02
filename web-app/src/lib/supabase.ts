@@ -1,41 +1,59 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+// Lazy initialization to avoid build-time errors
+let supabaseInstance: ReturnType<typeof createClient> | null = null;
+let supabaseAdminInstance: ReturnType<typeof createClient> | null = null;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    'Missing Supabase environment variables. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY'
-  );
+function getSupabaseClient() {
+  if (!supabaseInstance) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      throw new Error(
+        'Missing Supabase environment variables. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY'
+      );
+    }
+
+    supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: {
+        persistSession: true,
+        storageKey: 'sme-bi-auth',
+        storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+      },
+      global: {
+        headers: {
+          'X-Client-Info': 'sme-business-intelligence',
+        },
+      },
+    });
+  }
+  return supabaseInstance;
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    storageKey: 'sme-bi-auth',
-    storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-  },
-  db: {
-    schema: 'public',
-  },
-  global: {
-    headers: {
-      'X-Client-Info': 'sme-business-intelligence',
-    },
-  },
-});
+function getSupabaseAdminClient() {
+  if (!supabaseAdminInstance) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-// Admin client for server-side operations (requires service role key)
-export const supabaseAdmin = createClient(
-  supabaseUrl,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false,
-    },
+    if (!supabaseUrl || !serviceRoleKey) {
+      throw new Error(
+        'Missing Supabase admin environment variables. Please check NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY'
+      );
+    }
+
+    supabaseAdminInstance = createClient(supabaseUrl, serviceRoleKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    });
   }
-);
+  return supabaseAdminInstance;
+}
+
+// Export getter functions instead of instances to avoid build-time issues
+export { getSupabaseClient as supabase, getSupabaseAdminClient as supabaseAdmin };
 
 // Database schema types
 export type Database = {
@@ -46,7 +64,7 @@ export type Database = {
           id: string;
           name: string;
           domain: string | null;
-          settings: Record<string, any>;
+          settings: Record<string, unknown>;
           created_at: string;
           updated_at: string;
         };
@@ -54,7 +72,7 @@ export type Database = {
           id?: string;
           name: string;
           domain?: string;
-          settings?: Record<string, any>;
+          settings?: Record<string, unknown>;
           created_at?: string;
           updated_at?: string;
         };
@@ -62,7 +80,7 @@ export type Database = {
           id?: string;
           name?: string;
           domain?: string;
-          settings?: Record<string, any>;
+          settings?: Record<string, unknown>;
           updated_at?: string;
         };
       };
@@ -99,7 +117,7 @@ export type Database = {
           name: string;
           is_active: boolean;
           last_sync: string | null;
-          config: Record<string, any>;
+          config: Record<string, unknown>;
           created_at: string;
           updated_at: string;
         };
@@ -110,7 +128,7 @@ export type Database = {
           name: string;
           is_active?: boolean;
           last_sync?: string;
-          config?: Record<string, any>;
+          config?: Record<string, unknown>;
           created_at?: string;
           updated_at?: string;
         };
@@ -121,7 +139,7 @@ export type Database = {
           name?: string;
           is_active?: boolean;
           last_sync?: string;
-          config?: Record<string, any>;
+          config?: Record<string, unknown>;
           updated_at?: string;
         };
       };
@@ -179,14 +197,14 @@ export const isClient = typeof window !== 'undefined';
 
 // Helper function to get the current user's organization ID
 export const getCurrentOrganizationId = async (): Promise<string | null> => {
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user } } = await getSupabaseClient().auth.getUser();
   if (!user) return null;
   
-  const { data: userData } = await supabase
+  const { data: userData } = await getSupabaseClient()
     .from('users')
     .select('organization_id')
     .eq('id', user.id)
     .single();
     
-  return userData?.organization_id || null;
+  return (userData?.organization_id as string) || null;
 };
