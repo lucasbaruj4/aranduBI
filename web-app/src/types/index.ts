@@ -90,6 +90,38 @@ export interface AIQuery {
   timestamp: string;
 }
 
+// CSV Upload types
+export interface CSVUploadResult {
+  data: CSVRow[];
+  fileName: string;
+  rowCount: number;
+  errors: string[];
+}
+
+export interface CSVRow {
+  date: string;
+  amount: number;
+  description?: string;
+  category?: string;
+  customer?: string;
+  product?: string;
+}
+
+export interface UploadResponse {
+  dataSourceId: string;
+  metricsCreated: number;
+  fileName: string;
+  summary: {
+    totalRows: number;
+    processedRows: number;
+    categories: string[];
+    dateRange: {
+      start: string;
+      end: string;
+    };
+  };
+}
+
 // API Response types
 export interface ApiResponse<T = unknown> {
   success: boolean;

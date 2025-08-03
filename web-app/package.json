@@ -13,9 +13,13 @@
     "@google/generative-ai": "^0.24.1",
     "@heroicons/react": "^2.2.0",
     "@supabase/supabase-js": "^2.53.0",
+    "@types/papaparse": "^5.3.16",
     "next": "15.4.5",
+    "papaparse": "^5.5.3",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-dropzone": "^14.3.8",
+    "recharts": "^3.1.0",
     "zod": "^4.0.14"
   },
   "devDependencies": {
