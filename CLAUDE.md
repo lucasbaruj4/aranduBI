@@ -17,6 +17,7 @@ This file provides guidance to AI agents working with code in this repository.
 6. **Reference exact file paths** for easy navigation between agents
 7. **Document environment variable requirements** clearly
 8. **Mark task status** using: ✅ (complete), 🔄 (in progress), ⏳ (pending)
+9. **CRITICAL**: Make all features **easily verifiable by a human** - include clear instructions for testing functionality
 
 ## Project Overview
 
@@ -96,6 +97,42 @@ npm run start
 
 # Note: Automated tests not yet implemented - manual testing only
 # TODO: Add Jest/React Testing Library setup in future phase
+```
+
+### 🔍 HUMAN VERIFICATION REQUIREMENTS
+
+**CRITICAL FOR ALL AGENTS**: When implementing new features, ALWAYS include:
+
+1. **Clear Testing Instructions** - Provide step-by-step instructions for human verification
+2. **Expected Behavior** - Describe exactly what should happen when testing
+3. **Sample Data** - Include example data or files for testing (especially for CSV uploads)
+4. **Visual Confirmation** - Describe what the user should see on screen
+5. **Error Testing** - Include steps to test error handling (invalid inputs, etc.)
+
+#### Example Testing Documentation Format:
+```markdown
+## How to Test [Feature Name]
+
+### Prerequisites:
+- Application running on http://localhost:3000
+- User logged in to dashboard
+
+### Test Steps:
+1. Navigate to [specific page/section]
+2. Click [specific button/element]
+3. [Perform specific action]
+
+### Expected Results:
+- ✅ Should see [specific visual feedback]
+- ✅ Should display [specific data/message]
+- ✅ Should save [specific information] to database
+
+### Test with Sample Data:
+[Provide actual sample files or data to use]
+
+### Error Testing:
+- Try [invalid input] → Should show [specific error message]
+- Test [edge case] → Should handle gracefully
 ```
 
 ### Build and Deployment
@@ -290,7 +327,7 @@ SMTP_USER=...
 SMTP_PASSWORD=...
 ```
 
-## 🎯 CURRENT PROJECT STATUS (Updated: 2025-08-02)
+## 🎯 CURRENT PROJECT STATUS (Updated: 2025-08-03)
 
 ### ✅ COMPLETED FEATURES (MVP Foundation)
 1. **Authentication System**
@@ -322,9 +359,21 @@ SMTP_PASSWORD=...
    - Production build system (passes `npm run build`)
    - Environment variable management
 
+### 🔄 CURRENT DEVELOPMENT SESSION (2025-08-03)
+**Active Agent**: Claude Code (Sonnet 4)
+**Session Focus**: Data Features Implementation - CSV Upload & Visualization
+
+**COMPLETED TODAY:**
+1. **CSV Upload & Processing** ✅ - File upload with validation and parsing
+2. **Data Visualization** ✅ - Charts and graphs using Recharts
+
+**READY FOR USE:**
+- Full CSV upload pipeline with validation
+- Chart components library (LineChart, BarChart, PieChart)
+- Data transformation utilities
+- Dashboard integration
+
 ### ⏳ NEXT PHASE PRIORITIES (High Impact)
-1. **CSV Upload & Processing** - File upload with validation and parsing
-2. **Data Visualization** - Charts and graphs using Recharts
 3. **Business Metrics Engine** - Automated calculation and insights
 4. **Advanced Dashboard Widgets** - Customizable dashboard components
 5. **Report Generation** - PDF export functionality
@@ -343,6 +392,7 @@ SMTP_PASSWORD=...
 - **Type Safety**: ✅ Strict TypeScript mode enabled
 - **Security**: ✅ Input validation, RLS policies, auth middleware
 - **Performance**: ⚡ Optimized with lazy loading and proper error handling
+- **Testing**: 🔍 ALL features must be easily verifiable by human testing
 
 ## Performance & Monitoring
 
