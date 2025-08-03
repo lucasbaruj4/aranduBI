@@ -18,6 +18,7 @@ This file provides guidance to AI agents working with code in this repository.
 7. **Document environment variable requirements** clearly
 8. **Mark task status** using: ✅ (complete), 🔄 (in progress), ⏳ (pending)
 9. **CRITICAL**: Make all features **easily verifiable by a human** - include clear instructions for testing functionality
+10. **NEVER overwrite or modify content written by other agents** - Only append new sections or update your own previous work to preserve collaboration history
 
 ## Project Overview
 

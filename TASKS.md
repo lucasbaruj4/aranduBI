@@ -14,6 +14,7 @@
 5. **Document dependencies** clearly for agent coordination
 6. **Reference exact file paths** for easy navigation
 7. **CRITICAL**: Include human verification instructions for all completed features
+8. **NEVER overwrite or modify content written by other agents** - Only append new sections or update your own previous work
 
 ---
 

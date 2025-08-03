@@ -15,6 +15,7 @@
 6. **Reference file paths** with exact locations for easy navigation
 7. **Document environment variables** and configuration requirements
 8. **Test builds** before marking tasks complete
+9. **CRITICAL: NEVER overwrite or modify content written by other agents** - Only append new sections or update your own previous work
 
 ---
 
